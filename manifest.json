@@ -1,0 +1,9 @@
+{
+	"name": "DisablePvpInShip_Standalone",
+	"version_number": "1.0.0",
+	"website_url": "https://github.com/CoolLKKPS/DisablePvpInShip_Standalone",
+	"description": "HostFixes DisablePvpInShip Standalone",
+	"dependencies": [
+		"BepInEx-BepInExPack-5.4.2304"
+	]
+}

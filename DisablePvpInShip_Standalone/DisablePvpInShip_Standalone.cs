@@ -53,7 +53,13 @@ namespace DisablePvpInShip_Standalone
                 return;
             }
             string username = StartOfRound.Instance.allPlayerScripts[senderPlayerId].playerUsername;
-
+            /*
+            if (damageAmount > 40)
+            {
+                DisablePvpInShip_StandalonePlugin.logger.LogInfo($"Player #{senderPlayerId} ({username}) tried to damage ({instance.playerUsername}) for excessive damage ({damageAmount})");
+                damageAmount = 40;
+            }
+            */
             if (StartOfRound.Instance.shipInnerRoomBounds != null &&
                 StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(instance.transform.position))
             {
