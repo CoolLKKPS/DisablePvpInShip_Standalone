@@ -20,7 +20,7 @@ namespace DisablePvpInShip_Standalone
             Instance = this;
             logger = base.Logger;
             gameObject.hideFlags = HideFlags.HideAndDontSave;
-            NoPVP = Config.Bind("General", "NoPVP", false, "Disable PVP completely (will block vanilla clients from joining)");
+            NoPVP = Config.Bind("General", "NoPVP", false, "Disable PVP completely when you hosting");
             DisablePvpInShip_StandaloneServerReceiveRpcs.Instance = new DisablePvpInShip_StandaloneServerReceiveRpcs();
             harmony.PatchAll();
             Logger.LogInfo("DisablePvpInShip Standalone is loaded!");
@@ -112,6 +112,7 @@ namespace DisablePvpInShip_Standalone
             return codes.AsEnumerable();
         }
 
+        /*
         [HarmonyPostfix]
         [HarmonyPatch(typeof(NetworkManager), nameof(NetworkManager.SetSingleton))]
         private static void RegisterPrefab()
@@ -134,5 +135,6 @@ namespace DisablePvpInShip_Standalone
             catch { }
             NetworkManager.Singleton.PrefabHandler.AddNetworkPrefab(prefab);
         }
+        */
     }
 }

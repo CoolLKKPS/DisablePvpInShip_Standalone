@@ -7,12 +7,12 @@ If you already installed [HostFixes](https://thunderstore.io/c/lethal-company/p/
 Why i made this mod? hmm i have following reasons:
 1. For PVP players, i only respect the player who like to play with fair;
 2. For PVE players, sometimes you might encounter random players who really unwelcome;
-3. This mod only disable PVP in Ship, won't fully disable PVP in the game;
+3. This mod disable PVP in Ship, won't fully disable PVP in the game by default;
 4. I do think this is a necessary protection if play with random players.
 
 ## Config
 
-NoPVP - Disable PVP completely (will block vanilla clients from joining)
+NoPVP - Disable PVP completely when you hosting
 
 ## Credits
 
