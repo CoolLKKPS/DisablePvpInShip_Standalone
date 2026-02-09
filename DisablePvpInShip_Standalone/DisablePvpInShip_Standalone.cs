@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using GameNetcodeStuff;
 using HarmonyLib;
@@ -19,20 +20,22 @@ namespace DisablePvpInShip_Standalone
             Instance = this;
             logger = base.Logger;
             gameObject.hideFlags = HideFlags.HideAndDontSave;
+            NoPVP = Config.Bind("General", "NoPVP", false, "Disable PVP completely (will block vanilla clients from joining)");
             DisablePvpInShip_StandaloneServerReceiveRpcs.Instance = new DisablePvpInShip_StandaloneServerReceiveRpcs();
             harmony.PatchAll();
             Logger.LogInfo("DisablePvpInShip Standalone is loaded!");
         }
 
-        public const string PLUGIN_GUID = "HostFixes.DisablePvpInShip_Standalone";
+        public const string PLUGIN_GUID = "DisablePvpInShip_Standalone";
         public const string PLUGIN_NAME = "DisablePvpInShip_Standalone";
-        public const string PLUGIN_VERSION = "1.0.0";
+        public const string PLUGIN_VERSION = "1.0.2";
         public const string PLUGIN_VERSION_FULL = PLUGIN_VERSION + ".0";
 
         Harmony harmony = new Harmony(PLUGIN_GUID);
 
-        public static DisablePvpInShip_StandalonePlugin Instance;
         public static ManualLogSource logger;
+        public static ConfigEntry<bool> NoPVP;
+        public static DisablePvpInShip_StandalonePlugin Instance;
     }
 
     internal class DisablePvpInShip_StandaloneServerReceiveRpcs
@@ -53,6 +56,17 @@ namespace DisablePvpInShip_Standalone
                 return;
             }
             string username = StartOfRound.Instance.allPlayerScripts[senderPlayerId].playerUsername;
+            if (DisablePvpInShip_StandalonePlugin.NoPVP.Value)
+            {
+                DisablePvpInShip_StandalonePlugin.logger.LogInfo($"Player #{senderPlayerId} ({username}) tried to damage ({instance.playerUsername}) for ({damageAmount}) damage.");
+                return;
+            }
+            if (StartOfRound.Instance.shipInnerRoomBounds != null &&
+                StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(instance.transform.position))
+            {
+                DisablePvpInShip_StandalonePlugin.logger.LogInfo($"Player #{senderPlayerId} ({username}) tried to damage ({instance.playerUsername}) inside the ship.");
+                return;
+            }
             /*
             if (damageAmount > 40)
             {
@@ -60,14 +74,6 @@ namespace DisablePvpInShip_Standalone
                 damageAmount = 40;
             }
             */
-            if (StartOfRound.Instance.shipInnerRoomBounds != null &&
-                StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(instance.transform.position))
-            {
-                DisablePvpInShip_StandalonePlugin.logger.LogInfo($"Player #{senderPlayerId} ({username}) tried to damage ({instance.playerUsername}) inside the ship.");
-                return;
-            }
-
-            // DisablePvpInShip_StandalonePlugin.logger.LogInfo($"Player #{senderPlayerId} ({username}) damaged ({instance.playerUsername}) for ({damageAmount}) damage.");
             instance.DamagePlayerFromOtherClientServerRpc(damageAmount, hitDirection, playerWhoHit);
         }
     }
@@ -104,6 +110,29 @@ namespace DisablePvpInShip_Standalone
             }
 
             return codes.AsEnumerable();
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(NetworkManager), nameof(NetworkManager.SetSingleton))]
+        private static void RegisterPrefab()
+        {
+            if (!DisablePvpInShip_StandalonePlugin.NoPVP.Value)
+                return;
+            var prefab = new GameObject(DisablePvpInShip_StandalonePlugin.PLUGIN_NAME + " Prefab");
+            prefab.hideFlags |= HideFlags.HideAndDontSave;
+            Object.DontDestroyOnLoad(prefab);
+            var networkObject = prefab.AddComponent<NetworkObject>();
+            try
+            {
+                var field = typeof(NetworkObject).GetField("GlobalObjectIdHash", BindingFlags.NonPublic | BindingFlags.Instance);
+                if (field != null)
+                {
+                    uint hash = (uint)DisablePvpInShip_StandalonePlugin.PLUGIN_GUID.GetHashCode();
+                    field.SetValue(networkObject, hash);
+                }
+            }
+            catch { }
+            NetworkManager.Singleton.PrefabHandler.AddNetworkPrefab(prefab);
         }
     }
 }

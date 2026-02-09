@@ -10,6 +10,10 @@ Why i made this mod? hmm i have following reasons:
 3. This mod only disable PVP in Ship, won't fully disable PVP in the game;
 4. I do think this is a necessary protection if play with random players.
 
+## Config
+
+NoPVP - Disable PVP completely (will block vanilla clients from joining)
+
 ## Credits
 
 [CharlesE2](https://thunderstore.io/c/lethal-company/p/CharlesE2) - Used [HostFixes](https://thunderstore.io/c/lethal-company/p/CharlesE2/HostFixes) codes, under MIT license.
