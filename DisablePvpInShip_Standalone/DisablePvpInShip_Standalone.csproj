@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{0E827769-1061-4C25-87CA-3D8365DCF3CF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>DisablePvpInShip_Standalone</RootNamespace>
     <AssemblyName>DisablePvpInShip_Standalone</AssemblyName>
