@@ -31,7 +31,7 @@ namespace DisablePvpInShip_Standalone
         public const string PLUGIN_VERSION = "1.0.2";
         public const string PLUGIN_VERSION_FULL = PLUGIN_VERSION + ".0";
 
-        Harmony harmony = new Harmony(PLUGIN_GUID);
+        private readonly Harmony harmony = new Harmony(PLUGIN_GUID);
 
         public static ManualLogSource logger;
         public static ConfigEntry<bool> NoPVP;
